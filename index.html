@@ -7,12 +7,14 @@
 :root{--gold:#D4AF37;--gold-light:#F0D060;--gold-dark:#A68A2B;--bg-deep:#0a0a12;--bg-card:#12121e;--text-primary:#e8e0d0;--text-secondary:#a09880;--font-display:'Palatino Linotype','Book Antiqua',Palatino,serif;--font-body:Georgia,'Times New Roman',serif;--t:.5s cubic-bezier(.25,.46,.45,.94)}
 
 /* Mobile Landscape Mode */
-body.mobile-landscape{position:fixed;width:100vh;height:100vw;top:0;left:0;transform:rotate(90deg) translateY(-100%);transform-origin:0 0;overflow-x:hidden;overflow-y:scroll;-webkit-overflow-scrolling:touch}
-body.mobile-landscape .sec{width:100vh;height:100vw;min-height:100vw}
-body.mobile-landscape .bc{max-width:90vh}
-body.mobile-landscape .bci-right .char-full-wrap{height:calc(100vh - 100px);min-height:calc(100vw - 100px)}
-body.mobile-landscape .tt-arch{max-height:70vh}
-@media(max-width:768px){body.mobile-landscape .tt-focus-tip{width:60%}body.mobile-landscape .tft-close{right:calc(60% + 8px)}body.mobile-landscape nav{padding:8px 16px}}
+body.mobile-landscape{overflow:hidden;touch-action:none}
+#app{transition:transform .3s ease}
+body.mobile-landscape #app{position:absolute;top:0;left:0;width:100vh;height:100vw;transform-origin:0 0;transform:rotate(90deg) translateY(-100%);overflow-y:scroll;overflow-x:hidden;-webkit-overflow-scrolling:touch;scroll-snap-type:y mandatory}
+body.mobile-landscape #app .sec{width:100vh;height:100vw;min-height:100vw}
+body.mobile-landscape #app .bc{max-width:90vh}
+body.mobile-landscape #app .bci-right .char-full-wrap{height:calc(100vh - 100px);min-height:calc(100vw - 100px)}
+body.mobile-landscape #app .tt-arch{max-height:70vh}
+@media(max-width:768px){body.mobile-landscape #app .tt-focus-tip{width:60%}body.mobile-landscape #app .tft-close{right:calc(60% + 8px)}body.mobile-landscape nav{padding:8px 16px}}
 html{scroll-snap-type:y mandatory;scroll-behavior:smooth;-webkit-overflow-scrolling:touch}
 body{font-family:var(--font-body);background:var(--bg-deep);color:var(--text-primary);overflow-x:hidden;line-height:1.7}
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg-deep)}::-webkit-scrollbar-thumb{background:var(--gold-dark);border-radius:3px}
@@ -171,6 +173,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:14px 28px;display:f
 <button class="mt" id="mtb">♫</button><div class="mi" id="mi2"></div>
 <audio id="bgm" loop></audio><audio id="char"></audio>
 
+<div id="app">
 <section class="sec" id="h"><canvas id="pc"></canvas><div class="ht">翁法罗斯</div><div class="hs">AMPHOREUS · 永恒之地</div><p class="hd">三重命途交汇的模拟世界——智识、记忆、毁灭。<br>英雄流淌着金色的神血，踏上了逐火之旅。</p><div class="hq">"明天见，是最伟大的谎言"</div><div class="sh">— 向下探索 —</div></section>
 
 <section class="sec" id="river"><h2 class="st rv">时代之河</h2><div class="river-s-wrap rv" id="riverSWrap"></div></section>
@@ -182,6 +185,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:14px 28px;display:f
 <section class="sec" id="bk"><h2 class="st rv" style="margin-bottom:10px">黄金裔</h2><div class="bc rv"><div class="bs" id="sb"><div class="bst">— 如我所书 —</div></div><div class="bcont" id="bcont"><div class="bci" id="bci"></div><div class="bci-right" id="bciRight"></div><div class="cds2" id="cs"></div></div></div></section>
 
 <section class="sec" id="fn"><div class="fs rv"><div class="fq">"于长夜重返大地"</div><p class="ft">翁法罗斯的永劫回归以自身和铁墓一同陨落迎来终结。<br>权杖爆炸使之成为可观测的星体，「记忆」的忆质保留了文明的火种。</p><div class="fsi">愿此行，终抵群星</div><button class="fb" onclick="document.getElementById('h').scrollIntoView({behavior:'smooth'})">再启程</button></div></section>
+</div>
 
 <script>
 //======== DATA ========
