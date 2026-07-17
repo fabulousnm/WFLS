@@ -6,15 +6,16 @@
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--gold:#D4AF37;--gold-light:#F0D060;--gold-dark:#A68A2B;--bg-deep:#0a0a12;--bg-card:#12121e;--text-primary:#e8e0d0;--text-secondary:#a09880;--font-display:'Palatino Linotype','Book Antiqua',Palatino,serif;--font-body:Georgia,'Times New Roman',serif;--t:.5s cubic-bezier(.25,.46,.45,.94)}
 
-/* Mobile Landscape Mode */
-body.mobile-landscape{overflow:hidden;touch-action:none}
-#app{transition:transform .3s ease}
-body.mobile-landscape #app{position:absolute;top:0;left:0;width:100vh;height:100vw;transform-origin:0 0;transform:rotate(90deg) translateY(-100%);overflow-y:scroll;overflow-x:hidden;-webkit-overflow-scrolling:touch;scroll-snap-type:y mandatory}
-body.mobile-landscape #app .sec{width:100vh;height:100vw;min-height:100vw}
-body.mobile-landscape #app .bc{max-width:90vh}
-body.mobile-landscape #app .bci-right .char-full-wrap{height:calc(100vh - 100px);min-height:calc(100vw - 100px)}
-body.mobile-landscape #app .tt-arch{max-height:70vh}
-@media(max-width:768px){body.mobile-landscape #app .tt-focus-tip{width:60%}body.mobile-landscape #app .tft-close{right:calc(60% + 8px)}body.mobile-landscape nav{padding:8px 16px}}
+/* Mobile Portrait Overlay */
+#po{position:fixed;inset:0;z-index:10000;background:radial-gradient(ellipse at center,#1a1528 0%,#0a0a12 70%);display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;font-family:var(--font-display)}
+#po.show{display:flex}
+#po .po-icon{font-size:64px;margin-bottom:20px;animation:po-rotate 2s ease-in-out infinite}
+@keyframes po-rotate{0%,100%{transform:rotate(0deg)}25%{transform:rotate(90deg)}50%{transform:rotate(90deg)}75%{transform:rotate(0deg)}}
+#po .po-title{font-size:22px;color:var(--gold);letter-spacing:4px;margin-bottom:12px}
+#po .po-desc{font-size:14px;color:var(--text-secondary);letter-spacing:2px;line-height:1.8;margin-bottom:24px}
+#po .po-btn{display:inline-block;padding:12px 32px;border:1px solid var(--gold);color:var(--gold);font-size:14px;letter-spacing:3px;background:transparent;cursor:pointer;transition:var(--t)}
+#po .po-btn:hover{background:rgba(212,175,55,.1);box-shadow:0 0 20px rgba(212,175,55,.2)}
+#po .po-hint{font-size:11px;color:var(--text-secondary);opacity:.5;margin-top:16px;letter-spacing:2px}
 html{scroll-snap-type:y mandatory;scroll-behavior:smooth;-webkit-overflow-scrolling:touch}
 body{font-family:var(--font-body);background:var(--bg-deep);color:var(--text-primary);overflow-x:hidden;line-height:1.7}
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg-deep)}::-webkit-scrollbar-thumb{background:var(--gold-dark);border-radius:3px}
@@ -185,6 +186,14 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:14px 28px;display:f
 <section class="sec" id="bk"><h2 class="st rv" style="margin-bottom:10px">黄金裔</h2><div class="bc rv"><div class="bs" id="sb"><div class="bst">— 如我所书 —</div></div><div class="bcont" id="bcont"><div class="bci" id="bci"></div><div class="bci-right" id="bciRight"></div><div class="cds2" id="cs"></div></div></div></section>
 
 <section class="sec" id="fn"><div class="fs rv"><div class="fq">"于长夜重返大地"</div><p class="ft">翁法罗斯的永劫回归以自身和铁墓一同陨落迎来终结。<br>权杖爆炸使之成为可观测的星体，「记忆」的忆质保留了文明的火种。</p><div class="fsi">愿此行，终抵群星</div><button class="fb" onclick="document.getElementById('h').scrollIntoView({behavior:'smooth'})">再启程</button></div></section>
+</div>
+
+<div id="po">
+<div class="po-icon">📱</div>
+<div class="po-title">请横屏浏览</div>
+<div class="po-desc">将设备旋转至横屏<br>以获得最佳浏览体验</div>
+<button class="po-btn" onclick="forceLandscape()">强制横屏</button>
+<div class="po-hint">或旋转设备自动切换</div>
 </div>
 
 <script>
@@ -410,9 +419,22 @@ if(document.readyState==='complete'||document.readyState==='interactive')setTime
 window.addEventListener('load',ia);
 document.addEventListener('keydown',e=>{if(e.key==='ArrowDown'){const s=document.querySelectorAll('.sec');let i=gs();if(i<s.length-1)s[i+1].scrollIntoView({behavior:'smooth'})}if(e.key==='ArrowUp'){const s=document.querySelectorAll('.sec');let i=gs();if(i>0)s[i-1].scrollIntoView({behavior:'smooth'})}});
 
-// ===== Mobile Landscape - auto-rotate on portrait =====
-(function(){if(!/Mobi|Android|iPhone|iPad|iPod|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){document.body.classList.add('desktop');return}
-function checkOrientation(){var isPortrait=window.innerHeight>window.innerWidth;document.body.classList.toggle('mobile-landscape',isPortrait)}
-checkOrientation();window.addEventListener('resize',checkOrientation);window.addEventListener('orientationchange',function(){setTimeout(checkOrientation,400)})})();
+// ===== Mobile Portrait Overlay =====
+(function(){if(!/Mobi|Android|iPhone|iPad|iPod|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))return
+var po=document.getElementById('po'),meta=document.querySelector('meta[name="viewport"]'),forced=false
+function checkOrientation(){var p=window.innerHeight>window.innerWidth;if(forced){po.classList.remove('show');return}po.classList.toggle('show',p)}
+// Try orientation lock on Android
+function tryLock(){if(window.screen&&window.screen.orientation&&window.screen.orientation.lock)
+window.screen.orientation.lock('landscape').catch(function(){})}
+tryLock();checkOrientation()
+window.addEventListener('resize',checkOrientation)
+window.addEventListener('orientationchange',function(){setTimeout(checkOrientation,500)})
+// Force landscape button
+window.forceLandscape=function(){forced=true
+if(window.screen&&window.screen.orientation&&window.screen.orientation.lock)
+window.screen.orientation.lock('landscape').then(function(){po.classList.remove('show')}).catch(function(){})
+po.classList.remove('show')
+meta.setAttribute('content','width=1280, initial-scale='+(window.innerWidth/1280)+', maximum-scale=2.0')
+setTimeout(function(){window.scrollTo(0,0)},200)}})();
 </script>
 </body></html>
