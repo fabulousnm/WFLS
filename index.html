@@ -5,6 +5,14 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--gold:#D4AF37;--gold-light:#F0D060;--gold-dark:#A68A2B;--bg-deep:#0a0a12;--bg-card:#12121e;--text-primary:#e8e0d0;--text-secondary:#a09880;--font-display:'Palatino Linotype','Book Antiqua',Palatino,serif;--font-body:Georgia,'Times New Roman',serif;--t:.5s cubic-bezier(.25,.46,.45,.94)}
+
+/* Mobile Landscape Mode */
+body.mobile-landscape{position:fixed;width:100vh;height:100vw;top:0;left:0;transform:rotate(90deg) translateY(-100%);transform-origin:0 0;overflow-x:hidden;overflow-y:scroll;-webkit-overflow-scrolling:touch}
+body.mobile-landscape .sec{width:100vh;height:100vw;min-height:100vw}
+body.mobile-landscape .bc{max-width:90vh}
+body.mobile-landscape .bci-right .char-full-wrap{height:calc(100vh - 100px);min-height:calc(100vw - 100px)}
+body.mobile-landscape .tt-arch{max-height:70vh}
+@media(max-width:768px){body.mobile-landscape .tt-focus-tip{width:60%}body.mobile-landscape .tft-close{right:calc(60% + 8px)}body.mobile-landscape nav{padding:8px 16px}}
 html{scroll-snap-type:y mandatory;scroll-behavior:smooth;-webkit-overflow-scrolling:touch}
 body{font-family:var(--font-body);background:var(--bg-deep);color:var(--text-primary);overflow-x:hidden;line-height:1.7}
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg-deep)}::-webkit-scrollbar-thumb{background:var(--gold-dark);border-radius:3px}
@@ -397,5 +405,10 @@ function ia(){if(_initDone)return;_initDone=true;document.getElementById('loader
 if(document.readyState==='complete'||document.readyState==='interactive')setTimeout(ia,800);else document.addEventListener('DOMContentLoaded',()=>setTimeout(ia,800));
 window.addEventListener('load',ia);
 document.addEventListener('keydown',e=>{if(e.key==='ArrowDown'){const s=document.querySelectorAll('.sec');let i=gs();if(i<s.length-1)s[i+1].scrollIntoView({behavior:'smooth'})}if(e.key==='ArrowUp'){const s=document.querySelectorAll('.sec');let i=gs();if(i>0)s[i-1].scrollIntoView({behavior:'smooth'})}});
+
+// ===== Mobile Landscape - auto-rotate on portrait =====
+(function(){if(!/Mobi|Android|iPhone|iPad|iPod|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){document.body.classList.add('desktop');return}
+function checkOrientation(){var isPortrait=window.innerHeight>window.innerWidth;document.body.classList.toggle('mobile-landscape',isPortrait)}
+checkOrientation();window.addEventListener('resize',checkOrientation);window.addEventListener('orientationchange',function(){setTimeout(checkOrientation,400)})})();
 </script>
 </body></html>
