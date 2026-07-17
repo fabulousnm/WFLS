@@ -1,0 +1,401 @@
+<!DOCTYPE html><html lang="zh-CN">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>翁法洛斯 · 永恒之地</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--gold:#D4AF37;--gold-light:#F0D060;--gold-dark:#A68A2B;--bg-deep:#0a0a12;--bg-card:#12121e;--text-primary:#e8e0d0;--text-secondary:#a09880;--font-display:'Palatino Linotype','Book Antiqua',Palatino,serif;--font-body:Georgia,'Times New Roman',serif;--t:.5s cubic-bezier(.25,.46,.45,.94)}
+html{scroll-snap-type:y mandatory;scroll-behavior:smooth;-webkit-overflow-scrolling:touch}
+body{font-family:var(--font-body);background:var(--bg-deep);color:var(--text-primary);overflow-x:hidden;line-height:1.7}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg-deep)}::-webkit-scrollbar-thumb{background:var(--gold-dark);border-radius:3px}
+
+/* Loader */
+#loader{position:fixed;inset:0;z-index:9999;background:var(--bg-deep);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 1s}
+#loader.hidden{opacity:0;pointer-events:none}
+.loader-ring{width:80px;height:80px;border:3px solid transparent;border-top-color:var(--gold);border-radius:50%;animation:spin 1.2s linear infinite;position:relative}
+.loader-ring::before{content:'';position:absolute;width:60px;height:60px;border:3px solid transparent;border-bottom-color:var(--gold-light);border-radius:50%;top:7px;left:7px;animation:spin .8s linear infinite reverse}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loader-text{margin-top:20px;font-family:var(--font-display);font-size:14px;letter-spacing:6px;color:var(--gold);opacity:.7}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:14px 28px;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(180deg,rgba(10,10,18,.95),transparent);pointer-events:none}
+.nav-logo{font-family:var(--font-display);font-size:16px;color:var(--gold);letter-spacing:4px;pointer-events:auto}
+.nav-logo span{font-size:11px;color:var(--text-secondary);letter-spacing:2px;margin-left:6px}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--gold-light));z-index:1001;transition:width .3s}
+
+.mt{position:fixed;bottom:24px;right:24px;z-index:1000;width:44px;height:44px;border-radius:50%;border:1.5px solid var(--gold-dark);background:rgba(10,10,18,.85);backdrop-filter:blur(8px);color:var(--gold);font-size:18px;cursor:pointer;transition:var(--t);display:flex;align-items:center;justify-content:center}
+.mt:hover{border-color:var(--gold);background:rgba(212,175,55,.1)}
+#bgm,#char{display:none}
+.mi{position:fixed;bottom:24px;right:78px;z-index:1000;font-size:11px;color:var(--text-secondary);opacity:.6;letter-spacing:1px;pointer-events:none}
+
+/* Sections */
+.sec{scroll-snap-align:start;min-height:100vh;height:100vh;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:70px 24px 40px;overflow:hidden}
+.st{font-family:var(--font-display);font-size:clamp(24px,4.5vw,42px);color:var(--gold);letter-spacing:5px;margin-bottom:24px;text-align:center;z-index:2}
+.rv{opacity:0;transform:translateY(24px);transition:opacity .8s,transform .8s}
+.rv.v{opacity:1;transform:translateY(0)}
+
+/* HERO */
+#h{background:radial-gradient(ellipse at center,#1a1528 0%,var(--bg-deep) 70%);justify-content:center;text-align:center}
+#h::after{content:'';position:absolute;inset:0;background:url('images/amphoreus.jpg')center/cover no-repeat;opacity:.12;pointer-events:none}
+#pc{position:absolute;inset:0;pointer-events:none}
+.ht{font-family:var(--font-display);font-size:clamp(32px,7vw,72px);font-weight:900;color:var(--gold);text-shadow:0 0 30px rgba(212,175,55,.3);letter-spacing:8px;opacity:0;transform:translateY(30px);animation:fi 2s ease forwards 1s;position:relative;z-index:2}
+.hs{font-size:clamp(16px,2.5vw,24px);color:var(--text-secondary);margin-top:12px;letter-spacing:5px;opacity:0;animation:fi 2s ease forwards 1.8s;position:relative;z-index:2}
+.hd{max-width:600px;margin-top:24px;font-size:17px;line-height:1.8;color:rgba(232,224,208,.7);opacity:0;animation:fi 2s ease forwards 2.4s;position:relative;z-index:2}
+.hq{margin-top:36px;font-style:italic;font-size:18px;color:var(--gold);opacity:0;animation:fi 2s ease forwards 2.8s;border-left:2px solid var(--gold-dark);padding-left:20px;position:relative;z-index:2}
+@keyframes fi{to{opacity:1;transform:translateY(0)}}
+.sh{position:absolute;bottom:28px;animation:bo 2s infinite;color:var(--text-secondary);font-size:13px;letter-spacing:3px;opacity:.5;z-index:2}
+@keyframes bo{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+
+/* ===== HORIZONTAL S-CURVE RIVER ===== */
+#river{background:linear-gradient(180deg,var(--bg-deep),#0c0c1a);position:relative}
+#river::before{content:'';position:absolute;inset:0;background:url('images/时代之河背景图.jpg')center/cover no-repeat;opacity:.5;pointer-events:none}
+.river-s-wrap{position:relative;width:100%;max-width:960px;height:calc(100vh - 140px);margin:0 auto;display:flex;flex-direction:column;justify-content:center}
+.river-s-svg{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);width:100%;height:60%;pointer-events:none}
+.river-s-node{position:absolute;z-index:3;display:flex;flex-direction:column;align-items:center;transform:translateX(-50%)}
+.river-s-dot{width:16px;height:16px;border-radius:50%;border:2.5px solid var(--gold);background:var(--bg-deep);box-shadow:0 0 12px rgba(212,175,55,.3);z-index:4;position:relative}
+.river-s-dot::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:1px solid rgba(212,175,55,.25);animation:dp 3s ease infinite}
+@keyframes dp{0%,100%{opacity:.3;transform:scale(1)}50%{opacity:.6;transform:scale(1.12)}}
+.river-s-card{position:absolute;background:var(--bg-card);border:1px solid rgba(212,175,55,.18);border-radius:12px;padding:14px 18px;width:220px;transition:var(--t);text-align:center}
+.river-s-card .rc-icon{font-size:28px;margin-bottom:4px}
+.river-s-card .rc-name{font-family:var(--font-display);font-size:18px;color:var(--gold);letter-spacing:3px}
+.river-s-card .rc-tag{display:inline-block;padding:2px 12px;border:1px solid var(--gold-dark);border-radius:10px;font-size:11px;color:var(--text-secondary);margin-top:4px;letter-spacing:2px}
+.river-s-card .rc-div{height:1px;background:linear-gradient(90deg,transparent,var(--gold-dark),transparent);margin:8px 0}
+.river-s-card .rc-desc{color:rgba(232,224,208,.8);font-size:13px;line-height:1.6;text-align:left}
+.river-s-node[data-side="up"] .river-s-card{bottom:calc(100% + 10px)}
+.river-s-node[data-side="down"] .river-s-card{top:calc(100% + 10px)}
+
+/* ===== REGIONS - hero style fullscreen ===== */
+#reg{padding:0;position:relative;overflow:hidden;background:var(--bg-deep)}
+.reg-bg{position:absolute;inset:0;background-size:cover;background-position:center;transition:opacity 1.2s ease;opacity:0}
+.reg-bg.active{opacity:1}
+.reg-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(0deg,rgba(10,10,18,0) 0%,rgba(10,10,18,0) 30%,rgba(10,10,18,.9) 100%)}
+.reg-overlay{position:absolute;bottom:0;left:0;right:0;z-index:3;padding:60px 48px 40px;background:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.6) 50%,rgba(0,0,0,.95) 100%)}
+.reg-overlay .rn2{font-family:var(--font-display);font-size:32px;color:var(--gold);letter-spacing:5px;text-shadow:0 0 20px rgba(212,175,55,.2)}
+.reg-overlay .rt2{font-size:17px;color:var(--text-secondary);margin-top:4px;letter-spacing:3px}
+.reg-overlay .rdv{height:1px;background:linear-gradient(90deg,var(--gold-dark),transparent);margin:12px 0;width:50%}
+.reg-overlay .rdd2{font-size:15px;color:rgba(232,224,208,.85);line-height:1.8;max-width:600px}
+.reg-overlay .rm{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px}
+.reg-overlay .rm span{padding:2px 14px;border:1px solid rgba(212,175,55,.15);border-radius:10px;font-size:12px;color:var(--text-secondary)}
+.reg-dots{position:absolute;top:16px;left:50%;transform:translateX(-50%);z-index:5;display:flex;gap:10px}
+.reg-dot{width:12px;height:12px;border-radius:50%;border:2px solid rgba(212,175,55,.4);background:transparent;cursor:pointer;transition:var(--t);position:relative}
+.reg-dot.active{border-color:var(--gold);background:var(--gold);box-shadow:0 0 10px rgba(212,175,55,.4)}
+.reg-dot:hover{border-color:var(--gold)}
+.reg-dot .dot-label{position:absolute;top:-24px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:11px;color:var(--gold);letter-spacing:2px;opacity:0;transition:opacity .3s;pointer-events:none;font-family:var(--font-display)}
+.reg-dot:hover .dot-label{opacity:1}
+@media(max-width:768px){.reg-overlay{padding:40px 24px 24px}.reg-overlay .rn2{font-size:24px}.reg-overlay .rdd2{font-size:13px}}
+
+/* ===== TITANS UPPER SEMICIRCLE - full viewport ===== */
+#tt{background:radial-gradient(ellipse at 50% 25%,rgba(26,21,40,.6) 0%,var(--bg-deep) 70%);padding-top:4px;padding-bottom:16px;position:relative}
+#tt::before{content:'';position:absolute;inset:0;background:url('images/泰坦神座.jpg')center/cover no-repeat;opacity:.25;pointer-events:none}
+.tt-wrap{position:relative;width:100%;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:0}
+.tt-arch{position:relative;width:100%;flex:1;min-height:0;margin:0 auto}
+.tt-item{position:absolute;display:flex;flex-direction:column;align-items:center;cursor:pointer;transition:all .6s cubic-bezier(.34,1.56,.64,1);z-index:3}
+.tt-item img{object-fit:contain;filter:drop-shadow(0 0 6px rgba(212,175,55,.2));transition:var(--t)}
+.tt-item:hover img{filter:drop-shadow(0 0 14px rgba(212,175,55,.5));transform:scale(1.12)}
+.tt-item .tl{font-size:11px;color:var(--text-primary);margin-top:3px;text-align:center;letter-spacing:1px;pointer-events:none}
+.tt-item .ts2{font-size:9px;color:var(--text-secondary);text-align:center;pointer-events:none}
+.tt-gl{display:flex;justify-content:space-around;width:100%;max-width:750px;margin-top:4px;padding:0 15px;flex-shrink:0}
+.tt-gl span{font-family:var(--font-display);font-size:10px;color:var(--gold-dark);letter-spacing:3px;opacity:.5}
+
+/* Titan zoom - magnifier effect on whole view */
+.tt-wrap{position:relative;width:100%;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:0;overflow:hidden}
+.tt-arch{position:relative;width:100%;flex:1;min-height:0;margin:0 auto;transition:transform .6s cubic-bezier(.25,.46,.45,.94)}
+.tt-wrap.zoomed .tt-arch{transform:scale(2.5)}
+.tt-wrap.zoomed .tt-gl{opacity:0;transition:opacity .3s}
+.tt-wrap.zoomed .tt-arch .tt-item:not(.active){opacity:.05;transition:opacity .3s}
+.tt-wrap.zoomed .tt-arch .tt-item.active{opacity:1;z-index:4}
+.tt-wrap.zoomed .tt-arch .tt-item.active .tl,.tt-wrap.zoomed .tt-arch .tt-item.active .ts2{font-size:1.2em!important}
+.tt-focus-tip{position:fixed;right:0;top:0;bottom:0;width:28%;background:linear-gradient(270deg,rgba(18,18,30,.95) 70%,transparent);z-index:100;display:flex;flex-direction:column;justify-content:center;padding:56px 36px 56px 52px;transform:translateX(100%);opacity:0;transition:all .6s cubic-bezier(.25,.46,.45,.94);pointer-events:none}
+.tt-focus-tip.open{transform:translateX(0);opacity:1;pointer-events:auto}
+.tft-close{position:fixed;top:20px;right:calc(28% + 8px);background:none;border:none;color:var(--text-secondary);font-size:28px;cursor:pointer;transition:var(--t);z-index:101;opacity:0;pointer-events:none}
+.tft-close.open{opacity:1;pointer-events:auto}
+.tft-close:hover{color:var(--gold)}
+.tf-name{font-family:var(--font-display);font-size:28px;color:var(--gold);letter-spacing:4px}
+.tf-title{font-size:18px;color:var(--text-secondary);margin-top:4px;letter-spacing:2px}
+.tf-div{height:1px;background:linear-gradient(90deg,var(--gold-dark),transparent);margin:14px 0}
+.tf-row{margin-bottom:8px}
+.tf-row .l{color:var(--gold);font-size:14px;letter-spacing:2px;display:block}
+.tf-row .v{color:rgba(232,224,208,.9);font-size:16px;line-height:1.7}
+@media(max-width:768px){.tt-wrap.zoomed .tt-arch{transform:scale(2.5)}.tt-focus-tip{width:100%;background:rgba(18,18,30,.97)}.tft-close{right:16px}}
+
+/* ===== BOOK ===== */
+#bk{background:linear-gradient(180deg,var(--bg-deep),#0d0d18)}
+#bk::before{content:'';position:absolute;inset:0;background:url('images/黄金裔群像背景图.jpg')center/cover no-repeat;opacity:.5;pointer-events:none}
+.bc{display:flex;gap:0;max-width:1120px;width:100%;height:62vh;min-height:420px;background:rgba(18,18,30,.4);border:1px solid rgba(212,175,55,.2);border-radius:12px;overflow:hidden}
+.bs{width:190px;min-width:190px;background:rgba(10,10,18,.3);border-right:1px solid rgba(212,175,55,.15);overflow-y:auto}
+.bs::-webkit-scrollbar{width:3px}
+.bst{font-family:var(--font-display);font-size:12px;color:var(--gold-dark);letter-spacing:4px;padding:10px 14px;text-align:center;border-bottom:1px solid rgba(212,175,55,.1)}
+.ci{display:flex;align-items:center;gap:8px;padding:6px 14px;cursor:pointer;transition:var(--t);border-left:3px solid transparent}
+.ci:hover{background:rgba(212,175,55,.05)}
+.ci.active{background:rgba(212,175,55,.08);border-left-color:var(--gold)}
+.ca{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--gold-dark);overflow:hidden;flex-shrink:0;background:var(--bg-deep)}
+.ca img{width:100%;height:100%;object-fit:cover}
+.cn{font-size:13px;color:var(--text-primary)}
+.bcont{flex:1;padding:24px 28px;overflow-y:auto;position:relative;display:flex;gap:20px}
+.bci{max-width:480px;margin:0 auto 0 0;flex-shrink:0}
+.bci-right{flex:0 0 260px;width:260px;display:flex;align-items:center;justify-content:center;position:relative}
+.bci-right .char-full-wrap{width:248px;height:calc(62vh - 100px);min-height:360px;max-height:520px;display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:4px}
+.bci-right .char-full{width:100%;height:100%;object-fit:cover;object-position:center;border-radius:4px;filter:drop-shadow(0 0 20px rgba(212,175,55,.15));transition:var(--t)}
+.cdn{font-family:var(--font-display);font-size:clamp(18px,2.5vw,24px);color:var(--gold);letter-spacing:3px;display:block;margin-bottom:2px}
+.cdti{font-size:15px;color:var(--text-secondary);margin-top:2px;letter-spacing:2px}
+.cdd{height:1px;background:linear-gradient(90deg,var(--gold-dark),transparent);margin:10px 0}
+.cds{margin-bottom:10px}
+.cds h4{font-family:var(--font-display);font-size:11px;color:var(--gold);letter-spacing:3px;margin-bottom:3px}
+.cds p{font-size:14px;color:rgba(232,224,208,.8);line-height:1.8}
+.cdq{font-style:italic;color:var(--gold);border-left:2px solid var(--gold-dark);padding-left:12px;margin:10px 0;font-size:14px}
+.cds2{text-align:right;font-size:10px;color:rgba(160,152,128,.4);letter-spacing:2px;margin-top:6px}
+@media(max-width:768px){.bc{flex-direction:column;height:auto}.bs{width:100%;min-width:unset;max-height:150px;border-right:none;border-bottom:1px solid rgba(212,175,55,.15)}.bcont{padding:16px;flex-direction:column}.bci{max-width:100%}.bci-right{flex:0 0 auto;width:100%}.bci-right .char-full-wrap{width:100%;height:auto;min-height:auto;max-height:50vh}.bci-right .char-full{width:auto;height:auto;max-height:50vh;max-width:100%}}
+
+/* FINAL */
+#fn{background:radial-gradient(ellipse at center,#1a1528 0%,var(--bg-deep) 70%);text-align:center;position:relative}
+#fn::after{content:'';position:absolute;inset:0;background:url('images/最后一页背景图.png')center/cover no-repeat;opacity:.3;pointer-events:none}
+.fs{max-width:660px;position:relative;z-index:2}
+.fq{font-size:clamp(22px,3.5vw,32px);font-family:var(--font-display);color:var(--gold);letter-spacing:4px;line-height:1.5}
+.ft{font-size:17px;color:rgba(232,224,208,.7);margin-top:24px;line-height:2}
+.fsi{margin-top:32px;font-size:13px;color:var(--text-secondary);letter-spacing:5px}
+.fb{display:inline-block;margin-top:20px;padding:10px 32px;border:1px solid var(--gold);color:var(--gold);font-family:var(--font-display);font-size:13px;letter-spacing:4px;background:transparent;cursor:pointer;transition:var(--t)}
+.fb:hover{background:rgba(212,175,55,.1);box-shadow:0 0 20px rgba(212,175,55,.2)}
+</style>
+</head>
+<body>
+<div id="loader"><div class="loader-ring"></div><div class="loader-text">翁法罗斯</div></div>
+<nav><div class="nav-logo">翁法罗斯 <span>· 永恒之地</span></div></nav>
+<div class="progress-bar" id="pb"></div>
+<button class="mt" id="mtb">♫</button><div class="mi" id="mi2"></div>
+<audio id="bgm" loop></audio><audio id="char"></audio>
+
+<section class="sec" id="h"><canvas id="pc"></canvas><div class="ht">翁法罗斯</div><div class="hs">AMPHOREUS · 永恒之地</div><p class="hd">三重命途交汇的模拟世界——智识、记忆、毁灭。<br>英雄流淌着金色的神血，踏上了逐火之旅。</p><div class="hq">"明天见，是最伟大的谎言"</div><div class="sh">— 向下探索 —</div></section>
+
+<section class="sec" id="river"><h2 class="st rv">时代之河</h2><div class="river-s-wrap rv" id="riverSWrap"></div></section>
+
+<section class="sec" id="reg"><div class="reg-bg active" id="regBg"></div><div class="reg-bg" id="regBgNext"></div><div class="reg-overlay" id="regOverlay"><div class="rn2" id="regName"></div><div class="rt2" id="regTitle"></div><div class="rdv"></div><div class="rdd2" id="regDesc"></div><div class="rm" id="regMeta"></div></div><div class="reg-dots" id="regDots"></div></section>
+
+<section class="sec" id="tt"><div class="tt-wrap rv" id="ttWrap" style="width:100%"><div id="ttArch" class="tt-arch"></div><div class="tt-gl" id="ttGl"></div></div><div class="tt-focus-tip" id="ttTip"></div><button class="tft-close" id="tftClose" onclick="closeTitanDetail()">&times;</button></section>
+
+<section class="sec" id="bk"><h2 class="st rv" style="margin-bottom:10px">黄金裔</h2><div class="bc rv"><div class="bs" id="sb"><div class="bst">— 如我所书 —</div></div><div class="bcont" id="bcont"><div class="bci" id="bci"></div><div class="bci-right" id="bciRight"></div><div class="cds2" id="cs"></div></div></div></section>
+
+<section class="sec" id="fn"><div class="fs rv"><div class="fq">"于长夜重返大地"</div><p class="ft">翁法罗斯的永劫回归以自身和铁墓一同陨落迎来终结。<br>权杖爆炸使之成为可观测的星体，「记忆」的忆质保留了文明的火种。</p><div class="fsi">愿此行，终抵群星</div><button class="fb" onclick="document.getElementById('h').scrollIntoView({behavior:'smooth'})">再启程</button></div></section>
+
+<script>
+//======== DATA ========
+const ERAS=[
+{icon:'🌌',name:'启蒙世',tag:'泰坦的诞生',desc:'门径之泰坦雅努斯在混沌中最初苏醒，开辟通路，连通城邦。命运三泰坦编织了时间、空间与律法。支柱三泰坦撑起了天空、大地与海洋。'},
+{icon:'🏛️',name:'造物世',tag:'生命的塑造',desc:'创生三泰坦捏造了生命，刻法勒创造人类。世界充满了生命的喧响。'},
+{icon:'✨',name:'黄金世',tag:'繁荣的时代',desc:'世间既无疾苦，亦无灾祸；石无磨损，人无尽寿。文明的火焰在大地上燃烧，城邦如星点般兴起。'},
+{icon:'⚔️',name:'纷争世',tag:'灾厄降临',desc:'灾厄三泰坦降临，黑潮席卷世界。英雄们第一次踏上弑神之旅。'},
+{icon:'🌑',name:'幻灭世',tag:'永恒的暗夜',desc:'天空闭上了眼，大地陷入永夜。黄金裔们开始了逐火之旅。'}
+];
+
+const REGIONS=[
+{name:'奥赫玛',title:'永恒圣城·最后的避难所',titan:'刻法勒',heirs:'阿格莱雅·缇宝·风堇·刻律德菈',desc:'负世之泰坦刻法勒庇护下的城邦，人类的最后避难所。逐火之旅在此集结。',img:'奥赫玛.jpg',bgm:'奥赫玛'},
+{name:'悬锋城',title:'移动要塞·纷争之城',titan:'尼卡多利',heirs:'万敌',desc:'巨大的移动要塞，悬锋人以战斗至死为荣。位于抗争黑潮的最前线。',img:'悬锋城.jpg',bgm:'悬锋城'},
+{name:'命运重渊',title:'雅努萨波利斯·圣地',titan:'雅努斯·塔兰顿·欧洛尼斯',heirs:'缇宝',desc:'信仰命运三泰坦的宗教圣地。开拓通路，制定准则，守护记忆。',img:'命运重渊.jpg',bgm:'命运重渊'},
+{name:'神悟树庭',title:'理性学庭·求知之地',titan:'瑟希斯',heirs:'那刻夏',desc:'巨圣树枝干间的学庭，七贤人的学术殿堂。',img:'神悟树庭.jpg',bgm:'神悟树庭'},
+{name:'斯缇科西亚',title:'冥河城邦·涛声之境',titan:'法吉娜',heirs:'海瑟音',desc:'巨龙与海浪的城邦。',img:'斯缇科西亚.jpg',bgm:'斯缇科西亚'},
+{name:'晨昏之眼',title:'穹顶关塞·天空居所',titan:'艾格勒',heirs:'风堇',desc:'天空泰坦的浮空要塞，长有百眼的天空巨鸟。',img:'晨昏之眼.jpg',bgm:'晨昏之眼'},
+{name:'哀地里亚',title:'死亡之都',titan:'塞纳托斯',heirs:'遐蝶',desc:'死亡与湮灭的领域，冥河汇聚之地。',img:'哀地里亚.png',bgm:'哀地里亚'},
+{name:'多洛斯',title:'盗寇之都·机遇之城',titan:'扎格列斯',heirs:'赛飞儿',desc:'谎言与机运之城，贫民与凡人的希望之地。',img:'多洛斯.jpg',bgm:'多洛斯'},
+{name:'哀丽秘榭',title:'遗落秘境·永夜庇护',titan:'欧洛尼斯',heirs:'白厄·昔涟',desc:'遗落世外的村庄，三千万世轮回的记忆之地。',img:'哀丽秘榭.png',bgm:'哀丽秘榭'},
+];
+
+const TITANS=[
+{group:'命运',name:'雅努斯',title:'万径之门',power:'门径·同谐',heir:'缇宝',img:'门径.png',desc:'门径与道路的泰坦，混沌中最初苏醒的神明。'},
+{group:'命运',name:'塔兰顿',title:'公正之秤',power:'律法·秩序',heir:'刻律德菈',img:'律法.png',desc:'律法与公正的泰坦，创造利衡币，约束万物。'},
+{group:'命运',name:'欧洛尼斯',title:'永夜之帷',power:'岁月·记忆',heir:'昔涟',img:'岁月.png',desc:'岁月与夜幕的泰坦，司掌时间，珍藏记忆。'},
+{group:'支柱',name:'吉奥里亚',title:'磐岩之脊',power:'大地·不朽',heir:'荒笛',img:'大地.png',desc:'大地的泰坦，最温和的守护神。'},
+{group:'支柱',name:'法吉娜',title:'满溢之杯',power:'海洋·虚无',heir:'海瑟音',img:'海洋.png',desc:'大海与风暴的泰坦，传授酿酒技艺。'},
+{group:'支柱',name:'艾格勒',title:'晨昏之眼',power:'天空·存护',heir:'风堇',img:'天空.png',desc:'天空与天体的泰坦，长有百眼的天空巨鸟。'},
+{group:'创生',name:'墨涅塔',title:'黄金之茧',power:'浪漫·纯美',heir:'阿格莱雅',img:'浪漫.png',desc:'美与爱的泰坦，金纹蝴蝶之形。'},
+{group:'创生',name:'刻法勒',title:'全世之座',power:'负世·毁灭',heir:'白厄',img:'负世.png',desc:'最初的创生之神，背负黎明守护黑暗世界。'},
+{group:'创生',name:'瑟希斯',title:'裂分之枝',power:'理性·智识',heir:'那刻夏',img:'理性.png',desc:'求知的隐士，以巨圣树调和生命。'},
+{group:'灾厄',name:'扎格列斯',title:'翻飞之币',power:'诡计·欢愉',heir:'赛飞儿',img:'诡计.png',desc:'谎言与机运的双面神明。'},
+{group:'灾厄',name:'尼卡多利',title:'天谴之矛',power:'纷争·巡猎',heir:'万敌',img:'纷争.png',desc:'纷争与竞技的泰坦，圣甲武者。'},
+{group:'灾厄',name:'塞纳托斯',title:'灰黯之手',power:'死亡·均衡',heir:'遐蝶',img:'死亡.png',desc:'死亡和湮灭的泰坦，冥河引渡亡魂。'}
+];
+
+const CHARS=[
+{name:'白厄',cls:'负世的英雄',title:'卡厄斯兰那',pow:'负世·毁灭',wp:'🔥 憎恨火种',q:'"汝将肩负骄阳，直至灰白的黎明显著。"',st:'天生英雄，逐火之旅的真正领袖。与盗火行者合二为一，与众黄金裔击败铁墓。',ss:'作为「种子」保存在《如我所书》中',f:'白厄.mp3',img:'白厄.png'},
+{name:'昔涟',cls:'往昔的涟漪',title:'赛琳 Cyrene',pow:'岁月·记忆→创世·开拓',wp:'💖 爱之火种',q:'"汝将收梢于花开时，一如终结诞下起始。"',st:'无暇的真我。成为贯穿翁法罗斯的「记忆」，以自身闭合因果。',ss:'作为「种子」保存在《如我所书》中',f:'昔涟.mp3',img:'昔涟.png'},
+{name:'阿格莱雅',cls:'黄金的织者',title:'Aglaea',pow:'浪漫·纯美',wp:'🧵 节制火种',q:'"远道而来的贵客，风儿顺着金丝捎来了你的讯息。"',st:'奥赫玛的改衣师，在金丝茧房中编织命运。',ss:'于黎明升起时坠落',f:'阿格莱雅.mp3',img:'阿格莱雅.png'},
+{name:'万敌',cls:'亡国的王储',title:'迈德漠斯 Mydeimos',pow:'纷争·巡猎',wp:'⚔️ 约束火种',q:'"终有一日，汝将背后负创而死。"',st:'悬锋城亡国王储，晋升纷争半神。',ss:'作为「种子」保存在《如我所书》中',f:'万敌.mp3',img:'万敌.png'},
+{name:'那刻夏',cls:'殁世的学士',title:'阿那克萨戈拉斯',pow:'理性·智识',wp:'📖 批判火种',q:'"汝将超越至纯粹之终极，回归腐败苦黑。"',st:'神悟树庭学者，晋升理性半神。',ss:'作为「种子」保存在《如我所书》中',f:'那刻夏.mp3',img:'那刻夏.png'},
+{name:'遐蝶',cls:'死荫的侍女',title:'Castorice',pow:'死亡·均衡',wp:'🌸 平和火种',q:'"花海尽头，生者的魂灵将温暖汝之指尖……"',st:'死亡的侍女。拥有令万物凋零之力，却怀最温柔之心。',ss:'作为「种子」保存在《如我所书》中',f:'遐蝶.mp3',img:'遐蝶.png'},
+{name:'缇宝',cls:'命运的三子',title:'缇里西庇俄丝 Tribios',pow:'门径·同谐',wp:'🚪 同理火种',q:'"汝将碎作千片，凋零在他乡的土壤。"',st:'命运的三子，绝大部分黄金裔的老师。',ss:'作为「种子」保存在《如我所书》中',f:'缇宝.mp3',img:'缇宝.png'},
+{name:'风堇',cls:'摇光的医师',title:'雅辛忒丝 Hyacinthia',pow:'天空·存护',wp:'🕊️ 奉献火种',q:'"在彩虹桥的尽头，天空之子将缝补晨昏。"',st:'天空之子，击败艾格勒，让光明重归。',ss:'作为「种子」保存在《如我所书》中',f:'风堇.mp3',img:'风堇.png'},
+{name:'海瑟音',cls:'奏浪的剑骑',title:'海列屈拉 Helektra',pow:'海洋·虚无',wp:'🌊 自否火种',q:'"汝将长眠于涛声中，于天地境界之海完成征服。"',st:'海洋的剑骑。守护亡灵与海洋的边界。',ss:'作为「种子」保存在《如我所书》中',f:'海瑟音.mp3',img:'海瑟音.png'},
+{name:'赛飞儿',cls:'捷足的羁客',title:'赛法利娅 Cifera',pow:'诡计·欢愉',wp:'🎲 渴望火种',q:'"汝将与贪婪同行，亦将亡于分文。"',st:'来自多洛斯，诡计的羁客。',ss:'作为「种子」保存在《如我所书》中',f:'赛飞儿.mp3',img:'赛飞儿.png'},
+{name:'刻律德菈',cls:'执棋的君主',title:'Cerydra',pow:'律法·秩序',wp:'⚖️ 支配火种',q:'"汝将于天地境界之海完成征服，长眠于涛声中。"',st:'律法的君主。维护翁法罗斯的边界。',ss:'作为「种子」保存在《如我所书》中',f:'刻律德菈.mp3',img:'刻律德菈.png'},
+{name:'荒笛',cls:'掣地的伏龙',title:'Terravox',pow:'大地·不朽',wp:'🌍 求存火种',q:'"汝将自掘坟墓，焚毁于叛逆的熔炉。"',st:'大地半神。与丹恒同为「不朽」命途行者。',ss:'作为「种子」保存在《如我所书》中',f:'荒笛.mp3',img:'荒笛.png'},
+{name:'丹恒·腾荒',cls:'腾飞的荒龙',title:'Dan Heng·Permansor Terrae',pow:'大地·不朽（继承）',wp:'🐉 不朽龙裔',q:'"愿此行，终抵群星。"',st:'天外的星际旅人。接替荒笛成为大地泰坦。',ss:'继续着开拓之旅',f:'丹恒 、开拓者、三月七.mp3',img:'丹恒·腾荒.png'},
+{name:'开拓者',cls:'天外的救世主',title:'Trailblazer',pow:'开拓·记忆',wp:'⭐ 星核载体',q:'"愿此行，终抵群星。"',st:'行走开拓命途的无名客。接替白厄成为负世泰坦。',ss:'继续着开拓之旅',f:'丹恒 、开拓者、三月七.mp3',img:'开拓者.png'},
+{name:'长夜月',cls:'记忆的无漏净子',title:'长夜之月',pow:'岁月·记忆（继承）',wp:'🌙 执念之力',q:'"我是三月七的「过去」，一道不愿消散的执念。"',st:'三月七的过去，一道执念。拥有令使级力量后陷入沉眠。',ss:'陷入沉眠',f:'丹恒 、开拓者、三月七.mp3',img:'长夜月.png'},
+];
+
+const BGM=['创世涡心','命运重渊','奥赫玛','神悟树庭','','一页永恒'];const MB='music/地区/',CB='music/黄金裔主题曲/';
+let me=true,cb='',ccp=false;
+const bg=document.getElementById('bgm'),ch=document.getElementById('char'),mi3=document.getElementById('mi2');
+
+function sw(i){if(!me)return;const r=BGM[i];if(r===''){bg.pause();ch.pause();ch.currentTime=0;mi3.textContent='🔇';return}if(!r)return;cb=r;ccp=false;ch.pause();ch.currentTime=0;bg.pause();bg.currentTime=0;bg.src=MB+encodeURIComponent(r)+'.mp3';bg.volume=.3;bg.play().catch(()=>{});mi3.textContent='🎵 '+r;}
+function playRegionBGM(name){if(!me||!name)return;ccp=false;cb=name;ch.pause();ch.currentTime=0;bg.pause();bg.currentTime=0;bg.src=MB+encodeURIComponent(name)+'.mp3';bg.volume=.3;bg.play().catch(()=>{});mi3.textContent='🎵 '+name;}
+function pcm(fn){if(!me)return;ccp=true;ch.pause();ch.currentTime=0;bg.pause();ch.src=CB+encodeURIComponent(fn);ch.volume=.4;ch.play().catch(()=>{});ch.onended=()=>{ccp=false;bg.play().catch(()=>{});mi3.textContent='🎵 '+cb};mi3.textContent='🎵 '+fn.replace('.mp3','');}
+document.getElementById('mtb').onclick=()=>{me=!me;if(me){const i=gs();const r=BGM[i];cb=r;bg.src=MB+encodeURIComponent(r)+'.mp3';bg.play().catch(()=>{});document.getElementById('mtb').textContent='♫';mi3.textContent='🎵 '+r}else{bg.pause();ch.pause();document.getElementById('mtb').textContent='♪';mi3.textContent='🔇'}};
+function gs(){const s=document.querySelectorAll('.sec');for(let i=0;i<s.length;i++){const r=s[i].getBoundingClientRect();if(r.top<innerHeight/2&&r.bottom>innerHeight/2)return i}return 0}
+
+// Intersection
+(function(){const s=document.querySelectorAll('.sec');const o=new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting){const i=[...s].indexOf(en.target);if(i!==2)sw(i);document.getElementById('pb').style.width=((i+1)/6*100)+'%';en.target.querySelectorAll('.rv').forEach(el=>el.classList.add('v'))}})},{threshold:.3});s.forEach(s=>o.observe(s))})();
+
+// Particles
+function ip(){const c=document.getElementById('pc'),ctx=c.getContext('2d');let w,h,ps=[];function rs(){w=c.width=innerWidth;h=c.height=innerHeight};rs();addEventListener('resize',rs);for(let i=80;i--;)ps.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.5,vy:(Math.random()-.5)*.5,r:Math.random()*2+.5,a:Math.random()*.5+.2});function dr(){ctx.clearRect(0,0,w,h);ps.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=w;if(p.x>w)p.x=0;if(p.y<0)p.y=h;if(p.y>h)p.y=0;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`rgba(212,175,55,${p.a*.4})`;ctx.fill()});for(let i=0;i<ps.length;i++)for(let j=i+1;j<ps.length;j++){const d=Math.hypot(ps[i].x-ps[j].x,ps[i].y-ps[j].y);if(d<120){ctx.beginPath();ctx.moveTo(ps[i].x,ps[i].y);ctx.lineTo(ps[j].x,ps[j].y);ctx.strokeStyle=`rgba(212,175,55,${.06*(1-d/120)})`;ctx.lineWidth=.5;ctx.stroke()}}requestAnimationFrame(dr)}dr()}
+
+// ===== HORIZONTAL S-CURVE RIVER =====
+(function rr(){
+  const w=document.getElementById('riverSWrap');
+  if(!w)return;
+  // Bezier helper: cubic bezier y at t
+  function bezY(t,p0,p1,p2,p3){return (1-t)*(1-t)*(1-t)*p0+3*(1-t)*(1-t)*t*p1+3*(1-t)*t*t*p2+t*t*t*p3}
+  // Segment 1: (0,150)->(160,30)->(320,270)->(480,150)
+  // Segment 2: (480,150)->(640,30)->(800,270)->(960,150)
+  // 5 nodes at t values that give good distribution:
+  const seg1=[0,0.5,1]; // t for segment 1
+  const seg2=[0.3,0.8]; // t for segment 2
+  const sides=['up','down','up','down','up'];
+  const pcts=['8%','28%','50%','72%','92%'];
+  const yOffsets=[];
+  // Calculate bezier y for each node (viewBox y: 0-300, center at 150)
+  const yVals=[
+    bezY(0.16,150,30,270,150), // node 1 on seg1, t≈0.16
+    bezY(0.62,150,30,270,150), // node 2 on seg1, t≈0.62
+    150,                        // node 3 at junction
+    bezY(0.35,150,30,270,150), // node 4 on seg2, t≈0.35
+    bezY(0.82,150,30,270,150), // node 5 on seg2, t≈0.82
+  ];
+  const svg=`<svg class="river-s-svg" viewBox="0 0 960 300" preserveAspectRatio="xMidYMid meet"><path d="M 0 150 C 160 30, 320 270, 480 150 C 640 30, 800 270, 960 150" fill="none" stroke="#D4AF37" stroke-width="2" opacity="0.4"/><path d="M 0 150 C 160 30, 320 270, 480 150 C 640 30, 800 270, 960 150" fill="none" stroke="#D4AF37" stroke-width="6" opacity="0.08"/></svg>`;
+  let html=svg;
+  ERAS.forEach((e,i)=>{
+    // Convert viewBox y (0-300) to percentage of container height
+    // SVG is 60% height centered, viewBox center y=150 maps to 50% of container
+    const yPct=50+(yVals[i]-150)/300*60; // 60% SVG height, centered
+    html+=`<div class="river-s-node" data-side="${sides[i]}" style="left:${pcts[i]};top:${yPct}%">
+      <div class="river-s-dot"></div>
+      <div class="river-s-card">
+        <div class="rc-icon">${e.icon}</div>
+        <div class="rc-name">${e.name}</div>
+        <div class="rc-tag">${e.tag}</div>
+        <div class="rc-div"></div>
+        <div class="rc-desc">${e.desc}</div>
+      </div>
+    </div>`;
+  });
+  w.innerHTML=html;
+})();
+
+// ===== REGIONS =====
+(function rreg(){
+  const names=['奥赫玛','悬锋城','命运重渊','神悟树庭','斯缇科西亚','晨昏之眼','哀地里亚','多洛斯','哀丽秘榭'];
+  let cur=0;
+  const sec=document.getElementById('reg');
+  function showReg(i){
+    const r=REGIONS[i];
+        var a=document.getElementById('regBg'),b=document.getElementById('regBgNext');if(r.img){b.style.backgroundImage='url("images/城邦/'+r.img+'")';b.classList.add('active');setTimeout(function(){a.style.backgroundImage=b.style.backgroundImage;a.classList.add('active');b.classList.remove('active')},1200)}else{a.classList.remove('active');b.classList.remove('active')}
+    document.getElementById('regName').textContent=r.name;
+    document.getElementById('regTitle').textContent=r.title;
+    document.getElementById('regDesc').textContent=r.desc;
+    document.getElementById('regMeta').innerHTML="<span>🏛 "+r.titan+"</span><span>👤 "+r.heirs+"</span>";
+    document.querySelectorAll('.reg-dot').forEach((d,j)=>d.classList.toggle('active',j===i));
+  }
+  names.forEach((n,i)=>{
+    const dt=document.createElement('div');
+    dt.className='reg-dot'+(i===0?' active':'');
+    dt.innerHTML='<span class="dot-label">'+n+'</span>';
+    dt.onclick=()=>{cur=i;showReg(i);playRegionBGM(REGIONS[i].bgm)};
+    document.getElementById('regDots').appendChild(dt);
+  });
+  showReg(0);
+})();// ===== TITANS UPPER SEMICIRCLE 0~180 =====
+(function rtt(){
+  const arch=document.getElementById('ttArch');
+  const n=TITANS.length;
+  function positionTitans(){
+    const rect=arch.getBoundingClientRect();
+    const w=rect.width,h=rect.height;
+    if(w<100||h<100)return;
+    const R=Math.min(w*0.45,h*0.88);
+    const cx=w/2,cy=h-20;
+    const iconSize=Math.min(50,Math.max(30,R/7));
+    const fSize=Math.max(9,Math.min(14,iconSize/4));
+    const sSize=Math.max(8,Math.min(12,iconSize/5));
+    let items='';
+    TITANS.forEach((t,i)=>{
+      const rad=Math.PI*i/(n-1);
+      const x=cx+R*Math.cos(rad)-iconSize/2;
+      let y=cy-R*Math.sin(rad)-iconSize/2-33;
+      if(i===0||i===n-1)y-=20;
+      items+=`<div class="tt-item" data-i="${i}" style="left:${x}px;top:${y}px"><img src="images/泰坦/${t.img}" style="width:${iconSize}px;height:${iconSize}px"><div class="tl" style="font-size:${fSize}px">${t.name}</div><div class="ts2" style="font-size:${sSize}px">${t.title}</div></div>`;
+    });
+    const tSize=Math.min(36,Math.max(24,iconSize*0.55));
+    items+=`<div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);text-align:center;z-index:4;pointer-events:none"><div style="font-family:var(--font-display);font-size:${tSize}px;color:var(--gold);letter-spacing:6px;text-shadow:0 0 30px rgba(212,175,55,.3)">✦ 泰坦神座 ✦</div><div style="font-size:${Math.max(12,tSize*0.35)}px;color:var(--text-secondary);letter-spacing:4px;margin-top:2px">创世涡心</div></div>`;
+    arch.innerHTML=items;
+    arch.querySelectorAll('.tt-item').forEach(c=>c.onclick=()=>openTitan(c.dataset.i));
+  }
+  positionTitans();
+  window.addEventListener('resize',positionTitans);
+  document.getElementById('ttGl').innerHTML=['灾厄','支柱','创生','命运'].map(g=>`<span>${g}三泰坦</span>`).join('');
+})();
+function openTitan(i){
+  const t=TITANS[i];
+  const arch=document.getElementById('ttArch');
+  const wrap=document.getElementById('ttWrap');
+  const item=arch.querySelector(`.tt-item[data-i="${i}"]`);
+  const S=2.5;
+  const itemR=item.getBoundingClientRect();
+  const archR=arch.getBoundingClientRect();
+  // Titan center relative to arch
+  const ox=(itemR.left+itemR.width/2)-archR.left;
+  const oy=(itemR.top+itemR.height/2)-archR.top;
+  arch.style.transformOrigin=`${ox}px ${oy}px`;
+  // Target: center of left 3/4
+  const tx=(window.innerWidth*0.36-(itemR.left+itemR.width/2))/S;
+  const ty=(window.innerHeight*0.45-(itemR.top+itemR.height/2))/S;
+  arch.style.transform=`scale(${S}) translate(${tx}px,${ty}px)`;
+  arch.querySelectorAll('.tt-item').forEach(n=>n.classList.remove('active'));
+  item.classList.add('active');
+  wrap.classList.add('zoomed');
+  // Detail panel
+  document.getElementById('ttTip').innerHTML=`<div class="tf-name">${t.name}</div><div class="tf-title">${t.title}</div><div class="tf-div"></div><div class="tf-row"><span class="l">神权</span><span class="v">${t.power}</span></div><div class="tf-row"><span class="l">继承者</span><span class="v">${t.heir}</span></div><div class="tf-row"><span class="l">所属</span><span class="v">${t.group}</span></div><div class="tf-div"></div><div class="tf-row"><span class="v">${t.desc}</span></div>`;
+  document.getElementById('ttTip').classList.add('open');
+  document.getElementById('tftClose').classList.add('open');
+}
+function closeTitanDetail(){
+  const arch=document.getElementById('ttArch');
+  const wrap=document.getElementById('ttWrap');
+  arch.style.transform='';
+  wrap.classList.remove('zoomed');
+  document.getElementById('ttTip').classList.remove('open');
+  document.getElementById('tftClose').classList.remove('open');
+}
+
+// ===== BOOK =====
+(function rbk(){
+  const sb=document.getElementById('sb');
+  CHARS.forEach((c,i)=>{
+    const d=document.createElement('div');d.className='ci'+(i===0?' active':'');d.dataset.i=i;
+    d.innerHTML=`<div class="ca"><img src="images/角色/${c.img}"></div><div class="cn">${c.name}</div>`;
+    d.onclick=()=>{sb.querySelectorAll('.ci').forEach(el=>el.classList.remove('active'));d.classList.add('active');sc(i);pcm(c.f)};
+    sb.appendChild(d);
+  });sc(0);
+})();
+function sc(i){
+  const c=CHARS[i];
+  document.getElementById('bci').innerHTML=`<div class="cdn">${c.name}</div><div class="cdti">${c.title} · ${c.cls}</div><div class="cdd"></div><div class="cds"><h4>神权</h4><p>${c.pow}</p></div><div class="cds"><h4>火种</h4><p>${c.wp}</p></div><div class="cdq">${c.q}</div><div class="cds"><h4>故事</h4><p>${c.st}</p></div>`;
+  document.getElementById('bciRight').innerHTML=`<div class="char-full-wrap"><img class="char-full" src="images/角色/${c.img}" alt="${c.name} 立绘"></div>`;
+  document.getElementById('cs').textContent=c.ss;
+}
+
+// Init
+let _initDone=false;
+setTimeout(()=>{if(!_initDone){_initDone=true;document.getElementById('loader').classList.add('hidden');ia()}},3000);
+function ia(){if(_initDone)return;_initDone=true;document.getElementById('loader').classList.add('hidden');ip();document.querySelectorAll('.rv').forEach(el=>el.classList.add('v'));sw(0);document.getElementById('pb').style.width='16.6%'}
+if(document.readyState==='complete'||document.readyState==='interactive')setTimeout(ia,800);else document.addEventListener('DOMContentLoaded',()=>setTimeout(ia,800));
+window.addEventListener('load',ia);
+document.addEventListener('keydown',e=>{if(e.key==='ArrowDown'){const s=document.querySelectorAll('.sec');let i=gs();if(i<s.length-1)s[i+1].scrollIntoView({behavior:'smooth'})}if(e.key==='ArrowUp'){const s=document.querySelectorAll('.sec');let i=gs();if(i>0)s[i-1].scrollIntoView({behavior:'smooth'})}});
+</script>
+</body></html>
